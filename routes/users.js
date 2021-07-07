@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const User = require('../models/user')
+const User = require('../models/User')
 
 // Getttin all users
 router.get('/', async (req, res) => {
@@ -28,6 +28,7 @@ router.post('/', async(req, res) => {
     })
     try{
       const newUser = await user.save()
+      console.log('Saved user to DB', newUser.body)
       res.status(201).json(newUser)
     } catch (err) {
         res.status(400).json({message: err.message})
