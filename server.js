@@ -14,12 +14,35 @@ mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser: true, useUnifiedTop
 const db = mongoose.connection
 
 db.on('error', (error) => console.error(error))
-db.once('open', () => console.log('Connected to Database'))
+db.once('open', () => console.log('Connected to MongoDB Database'))
 
 // const Post = db.model(Post, postSchema)  - Cannot access 'Post' before initialization
 
 // Init Middleware
 app.use(express.json())
+
+
+// Take a text password and create a hash
+
+const bcrypt = require("bcryptjs")
+
+const password = "mypass123"
+const saltRounds = 10
+
+bcrypt.genSalt(saltRounds, function (saltError, salt) {
+  if (saltError) {
+    throw saltError
+  } else {
+    bcrypt.hash(password, salt, function(hashError, hash) {
+      if (hashError) {
+        throw hashError
+      } else {
+        console.log(hash)
+        //$2a$10$FEBywZh8u9M0Cec/0mWep.1kXrwKeiWDba6tdKvDfEBjyePJnDT7K
+      }
+    })
+  }
+})
 
 app.get('/', (req, res) =>{
     let today = new Date()
