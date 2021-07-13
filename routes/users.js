@@ -28,7 +28,7 @@ router.post('/', async(req, res) => {
     })
     try{
       const newUser = await user.save()
-      console.log('Saved user to DB', newUser.body)
+      console.log('Saved user to DB', newUser)
       res.status(201).json(newUser)
     } catch (err) {
         res.status(400).json({message: err.message})
