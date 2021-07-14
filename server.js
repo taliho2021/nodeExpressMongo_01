@@ -55,6 +55,7 @@ app.use('/users', require('./routes/users'))
 app.use('/auth', require('./routes/auth'))
 app.use('/profile', require('./routes/profile'))
 app.use('/posts', require('./routes/posts'))
+app.use('/importers', require('./routes/importers'))
 
 const PORT = process.env.PORT || 5000
 
