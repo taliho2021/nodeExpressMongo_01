@@ -36,7 +36,7 @@ const importerSchema = new mongoose.Schema({
     website: {
         type: String
     },
-    email: {
+    email1: {
         type: String
     }
 })
