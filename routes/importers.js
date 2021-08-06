@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const Importer = require('../models/importer')
 
-// Getttin all users
+// Getttin all importers
 router.get('/', async (req, res) => {
     try {
        const importers = await Importer.find()
@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
     }
 })
 
-//Creating user
+//Creating a new importer
 router.post('/', async(req, res) => {
     const importer = new Importer({
        clientId: req.body.clientId,
