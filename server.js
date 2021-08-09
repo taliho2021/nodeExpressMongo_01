@@ -4,6 +4,8 @@ const express = require('express')
 const path = require('path')
 const app = express()
 const mongoose = require('mongoose')
+const cors =require('cors')
+
 
 // Add EJS views.  Need to add after const app = express() has been loaded
 app.set('view engine', 'ejs')
@@ -20,7 +22,19 @@ db.once('open', () => console.log('Connected to MongoDB Database'))
 
 // Init Middleware
 app.use(express.json())
+// To utilize static files in public directory at the ROOT directory
+app.use(express.static(__dirname +'/public'))
 
+// Add below code to prevent CORS exception on the same sever with different port. Other option is 
+// to install cors and use the middleware
+// app.use((req, res, next) => {
+//   res.setHeader('Access-Control-Allow-Origin', '*')
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE')
+//   res.setHeader('Access-Conttrol-Allow-Header', 'Content-Type, Authorization')
+//   next();
+// })
+
+app.use(cors())
 
 // Take a text password and create a hash
 
@@ -56,6 +70,7 @@ app.use('/auth', require('./routes/auth'))
 app.use('/profile', require('./routes/profile'))
 app.use('/posts', require('./routes/posts'))
 app.use('/importers', require('./routes/importers'))
+// app.use('/importers/:clientId', require('./routes/importers/:clientId'))
 
 const PORT = process.env.PORT || 5000
 

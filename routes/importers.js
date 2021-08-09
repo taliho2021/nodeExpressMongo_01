@@ -12,6 +12,16 @@ router.get('/', async (req, res) => {
     }
 })
 
+// Get one importer
+router.get('/importers/:clientId', async (req,res) => {
+    try {
+        const importer = await Importer.findOne({clientId: req.params.clientId})
+        res.json(importers)
+    } catch(err){
+        res.status(500).json({ message: err.message})
+    }
+})
+
 //Creating a new importer
 router.post('/', async(req, res) => {
     const importer = new Importer({
@@ -35,5 +45,16 @@ router.post('/', async(req, res) => {
 
     }
 })
+
+// Delete all importers
+router.delete('/', async (req, res) => {
+    try {
+       const importers = await Importer.delteMany()
+       res.json(importers)
+    } catch (err) {
+       res.status(500).json({ message: err.message})
+    }
+})
+
 
 module.exports = router
