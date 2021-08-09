@@ -4,6 +4,7 @@ const express = require('express')
 const path = require('path')
 const app = express()
 const mongoose = require('mongoose')
+const cors = require('cors')
 
 // Add EJS views.  Need to add after const app = express() has been loaded
 app.set('view engine', 'ejs')
@@ -21,6 +22,14 @@ db.once('open', () => console.log('Connected to MongoDB Database'))
 // Init Middleware
 app.use(express.json())
 
+// Add below to prevent CORS error - Commented out and added CORS package
+// app.use((req, res, next) => {
+//   res.setHeader('Access-Control-Allow-Origin', '*')
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE')
+//   res.setHeader('Access-Contorl-Allow-Headers', 'Content-Type, Authorization')
+//   next()
+// })
+app.use(cors())
 
 // Take a text password and create a hash
 

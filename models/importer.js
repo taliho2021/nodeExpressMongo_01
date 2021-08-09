@@ -23,7 +23,7 @@ const importerSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    coutnry: {
+    country: {
         type: String,
         required: true
     },
@@ -36,7 +36,7 @@ const importerSchema = new mongoose.Schema({
     website: {
         type: String
     },
-    email: {
+    email1: {
         type: String
     }
 })
