@@ -1,16 +1,22 @@
 const express = require('express')
 const router = express.Router()
+const { body } =require('express-validator/check')
 const Importer = require('../models/importer')
+const isAuth = require('../middleware/is-auth')
+const importController = require('../controllers/importers')
 
-// Getttin all users
-router.get('/', async (req, res) => {
-    try {
-       const importers = await Importer.find()
-       res.json(importers)
-    } catch (err) {
-    res.status(500).json({ message: err.message})
-    }
-})
+
+// Gettting all users
+router.get('/', isAuth, importController.getImporters)
+
+// async (req, res) => {
+//     try {
+//        const importers = await Importer.find()
+//        res.json(importers)
+//     } catch (err) {
+//     res.status(500).json({ message: err.message})
+//     }
+// })
 
 //Creating user
 router.post('/', async(req, res) => {
