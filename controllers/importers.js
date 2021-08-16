@@ -1,4 +1,4 @@
-const {validationResult } = require('express-validator/check')
+const {validationResult } = require('express-validator')
 const path = require('path')
 
 const Importer = require('../models/importer')
@@ -12,21 +12,24 @@ exports.getImporters = (async(req, res, next) => {
      }
 })
 
-exports.getImporter = (async (req, res, next) =>{
-    const clientId = req.params.clientId
-    Importer.findById(clientId) 
-        .then(importer =>{
-            const error = new Error('Could not find importer')
-            error.statusCode = 404
-            throw error
-        })
-        .catch(err =>{
-            if (!err.statusCode){
-                err.statusCode = 500
+exports.getImporter= (req, res, next ) =>{
+        const clientId = req.params.clientId
+        Importer.findById(clientId)
+        .then(importer => {
+            if (!importer) {
+                const error = new Error('Could not find importer')
+                error.statusCode = 404
+                throw error
             }
-            next(err)
+            res.status(200).json({message: ' Importer fetched', importer: importer})
         })
-})
+        . catch(err =>{
+               if (!err.statusCode) {
+                   err.statusCode = 500
+               }
+               next(err)
+            })  
+        }
 
 exports.updateImporter = (async (req, res, next) => {
     const clientId = req.params.clientId
@@ -77,7 +80,7 @@ exports.updateImporter = (async (req, res, next) => {
     })
 
 // Add a new importer to DB
-exports.addImporter = ( async(req, res) => {
+exports.addImporter = (async (req, res, next ) => {
     const importer = new Importer({
         clientId: req.body.clientId,
         name: req.body.name,

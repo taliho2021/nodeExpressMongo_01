@@ -1,14 +1,27 @@
 const express = require('express')
 const router = express.Router()
-const { body } =require('express-validator/check')
+const { body } =require('express-validator')
 const Importer = require('../models/importer')
 const isAuth = require('../middleware/is-auth')
 const importController = require('../controllers/importers')
+const importer = require('../models/importer')
 
-
-// Gettting all users
+// Gettting all importers
 router.get('/',importController.getImporters)
 
+//Creating importer
+router.post('/', importController.addImporter)
+
+// Getting ONE importer
+
+router.get('/:clientId', importController.getImporter)
+
+module.exports = router
+
+
+
+
+// Getting ALL importers
 // async (req, res) => {
 //     try {
 //        const importers = await Importer.find()
@@ -18,8 +31,7 @@ router.get('/',importController.getImporters)
 //     }
 // })
 
-//Creating user
-router.post('/', importController.addImporter)
+// Adding ONE importer
 // router.post('/', async(req, res) => {
 //     const importer = new Importer({
 //        clientId: req.body.clientId,
@@ -42,5 +54,3 @@ router.post('/', importController.addImporter)
 
 //     }
 // })
-
-module.exports = router
