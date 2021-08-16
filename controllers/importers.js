@@ -14,7 +14,7 @@ exports.getImporters = (async(req, res, next) => {
 
 exports.getImporter= (req, res, next ) =>{
         const clientId = req.params.clientId
-        Importer.findById(clientId)
+        Importer.findByName(clientId)
         .then(importer => {
             if (!importer) {
                 const error = new Error('Could not find importer')
