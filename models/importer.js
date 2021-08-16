@@ -23,7 +23,7 @@ const importerSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    coutnry: {
+    country: {
         type: String,
         required: true
     },

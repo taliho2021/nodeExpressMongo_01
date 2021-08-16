@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
 //     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
 // }
 
-// // checking is password is valild
+// // checking if password is valild
 // userSchema.methods.validPassword = function(password) {
 //     return bcrypt.compareSync(password, this.passowrd)
 // }

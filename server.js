@@ -4,6 +4,7 @@ const express = require('express')
 const path = require('path')
 const app = express()
 const mongoose = require('mongoose')
+const cors = require('cors')
 
 // Add EJS views.  Need to add after const app = express() has been loaded
 app.set('view engine', 'ejs')
@@ -20,7 +21,7 @@ db.once('open', () => console.log('Connected to MongoDB Database'))
 
 // Init Middleware
 app.use(express.json())
-
+app.use(cors())
 
 // Take a text password and create a hash
 
