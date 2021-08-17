@@ -13,15 +13,15 @@ exports.getImporters = (async(req, res, next) => {
 })
 
 exports.getImporter= (req, res, next ) =>{
-        const clientId = req.params.clientId
-        Importer.findByName(clientId)
+        const cid = req.params.clientId
+        Importer.findOne({'clientId': cid})
         .then(importer => {
             if (!importer) {
                 const error = new Error('Could not find importer')
                 error.statusCode = 404
                 throw error
             }
-            res.status(200).json({message: ' Importer fetched', importer: importer})
+            res.status(200).json({message: ' Importer fetched', importer: Importer})
         })
         . catch(err =>{
                if (!err.statusCode) {
