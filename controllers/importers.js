@@ -14,6 +14,7 @@ exports.getImporters = (async(req, res, next) => {
 })
 
 exports.getImporter= (req, res, next ) =>{
+<<<<<<< HEAD
         const cId = req.params.clientId
 
         Importer.findOne({clientId: cId}, (err, foundImporter) => {
@@ -46,6 +47,25 @@ exports.getImporter= (req, res, next ) =>{
         // }
       
     }
+=======
+        const cid = req.params.clientId
+        Importer.findOne({'clientId': cid})
+        .then(importer => {
+            if (!importer) {
+                const error = new Error('Could not find importer')
+                error.statusCode = 404
+                throw error
+            }
+            res.status(200).json({message: ' Importer fetched', importer: Importer})
+        })
+        . catch(err =>{
+               if (!err.statusCode) {
+                   err.statusCode = 500
+               }
+               next(err)
+            })  
+        }
+>>>>>>> 8926dbe289ea69c0f642a15282b919928169ab57
 
 exports.updateImporter = (async (req, res, next) => {
     const clientId = req.params.clientId
