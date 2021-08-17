@@ -1,5 +1,6 @@
 const {validationResult } = require('express-validator')
 const path = require('path')
+const importer = require('../models/importer')
 
 const Importer = require('../models/importer')
 
@@ -13,23 +14,38 @@ exports.getImporters = (async(req, res, next) => {
 })
 
 exports.getImporter= (req, res, next ) =>{
-        const clientId = req.params.clientId
-        Importer.findByName(clientId)
-        .then(importer => {
-            if (!importer) {
-                const error = new Error('Could not find importer')
-                error.statusCode = 404
-                throw error
+        const cId = req.params.clientId
+
+        Importer.findOne({clientId: cId}, (err, foundImporter) => {
+            if (foundImporter) {
+                res.status(200).json({message: 'Importer fetched' , importer:foundImporter})
+            } else {
+                res.send('No importer matching Id found')
             }
-            res.status(200).json({message: ' Importer fetched', importer: importer})
-        })
-        . catch(err =>{
-               if (!err.statusCode) {
-                   err.statusCode = 500
-               }
-               next(err)
-            })  
-        }
+        });
+
+        // try {
+        //     const cId = req.params.clientId
+        //     Importer.findOne({clientId: cId}, function(err, foundImporter))
+        //         .then(data => {
+        //             if (!data){
+        //                 const error = new Error('Could not find the importer')
+        //                 error.statusCode = 404
+        //                 throw error
+        //             }
+        //         res.status(200).json({ message: 'Importer fetched', importer:data})
+        //         window.alert(data.value|json)
+        //         })
+        // } 
+        
+        // catch (err) {
+        //     if (!err.statusCode) {
+        //         err.statusCode = 500
+        //     }
+        //     next(err)
+        // }
+      
+    }
 
 exports.updateImporter = (async (req, res, next) => {
     const clientId = req.params.clientId
