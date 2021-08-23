@@ -70,7 +70,7 @@ exports.updateImporter = ((req, res, next) => {
             }
             next(err)
         })
-    })
+)})
 
 // Add a new importer to DB
 exports.addImporter = (async (req, res, next ) => {
