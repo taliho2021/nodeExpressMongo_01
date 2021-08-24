@@ -6,18 +6,24 @@ const userSchema = new mongoose.Schema({
     username: String,
     email: String,
     password: String,
+    roles: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Role'
+      }
+    ],
     date: Date,
 })
 
 // //hash the password
-// userSchema.methods.generateHash = function(password) {
-//     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
-// }
+userSchema.methods.generateHash = function(password) {
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
+}
 
 // // checking if password is valild
-// userSchema.methods.validPassword = function(password) {
-//     return bcrypt.compareSync(password, this.passowrd)
-// }
+userSchema.methods.validPassword = function(password) {
+    return bcrypt.compareSync(password, this.passowrd)
+}
 
 userSchema.pre("save", function (next) {
     const user = this
@@ -53,4 +59,5 @@ userSchema.pre("save", function (next) {
   }
 
 
-module.exports= mongoose.model('User', userSchema)
+module.exports=
+    mongoose.models.User || mongoose.model('User', userSchema)

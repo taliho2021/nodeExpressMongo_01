@@ -5,14 +5,18 @@ const path = require('path')
 const app = express()
 const mongoose = require('mongoose')
 const cors = require('cors')
+const dm = require('./models')
 
 // Add EJS views.  Need to add after const app = express() has been loaded
 app.set('view engine', 'ejs')
 
 // Connect Database
-mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.DATABASE_URL, {
+  useNewUrlParser: true, 
+  useUnifiedTopology: true })
 
 const db = mongoose.connection
+const Role = dm.role
 
 db.on('error', (error) => console.error(error))
 db.once('open', () => console.log('Connected to MongoDB Database'))
@@ -49,6 +53,44 @@ app.get('/', (req, res) =>{
     let today = new Date()
     res.render('home', {todayDate: today})
 })
+
+// Create 3 rows in roles collection 
+
+function initial(){
+  Role.estimatedDocumentCount((err, count) => {
+    if (!err && count === 0) {
+      new Role({
+        name: 'user'
+      }).save(err => {
+        if (err) {
+          console.log('error', err)
+        }
+        console.log("added 'user' to roles collection" )
+      })
+
+      new Role({
+        name: 'moderator'
+      }).save (err => {
+        if (err) {
+          console.log('error', err)
+        }
+        console.log("added 'moderator' to roles collection")
+      }) 
+
+      new Role({
+        name: 'admin'
+      }).save (err => {
+        if (err) {
+          console.log('error', err)
+        }
+        console.log("added 'admin' to roles collection")
+      }) 
+      
+    }
+  })
+}
+
+initial()
 
 // Define Routes
 // const usersRouter = require('./routes/users')
