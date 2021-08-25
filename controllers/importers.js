@@ -1,6 +1,5 @@
 const {validationResult } = require('express-validator')
 const path = require('path')
-const importer = require('../models/importer')
 
 const Importer = require('../models/importer')
 
