@@ -58,6 +58,6 @@ userSchema.pre("save", function (next) {
     })
   }
 
-
+// Compile a model from the schema
 module.exports=
     mongoose.models.User || mongoose.model('User', userSchema)

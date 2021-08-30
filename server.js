@@ -15,13 +15,13 @@ app.set('view engine', 'ejs')
 // Connect Database
 mongoose.connect(process.env.DATABASE_URL, {
   useNewUrlParser: true, 
-  useUnifiedTopology: true })
+  useUnifiedTopology: true})
 
 const db = mongoose.connection
 const Role = dm.role
 
 db.on('error', (error) => console.error(error))
-db.once('open', () => console.log('Connected to MongoDB Database'))
+db.once('open', () => console.log('Connected to MongoDB ANA Link Database'))
 
 // const Post = db.model(Post, postSchema)  - Cannot access 'Post' before initialization
 

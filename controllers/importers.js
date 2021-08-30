@@ -87,7 +87,7 @@ exports.addImporter = (async (req, res, next ) => {
      })
      try{
        const newImporter = await importer.save()
-       console.log('Saved the imporeter to DB', newImporter)
+       console.log('Saved the importer to DB', newImporter)
        res.status(201).json(newImporter)
      } catch (err) {
          res.status(400).json({message: err.message})

@@ -1,8 +1,10 @@
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const { check, validationResult } = require('express-validator')
+
 const User = require('../models/user');
 const Role = require('../models/role');
 
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcryptjs");
 
 exports.signup = (req, res) => {
   const user = new User({
@@ -61,6 +63,12 @@ exports.signup = (req, res) => {
 };
 
 exports.signin = (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()){
+    return res.status(422).json({
+      message:'Validation failed!',
+      errors: errors.array()})
+  }
   User.findOne({
     username: req.body.username
   })

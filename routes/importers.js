@@ -1,10 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { body } =require('express-validator')
-const Importer = require('../models/importer')
-const isAuth = require('../middleware/is-auth')
 const importController = require('../controllers/importers')
-const importer = require('../models/importer')
 
 // Gettting all importers
 router.get('/',importController.getImporters)
