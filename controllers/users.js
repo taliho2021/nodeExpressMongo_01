@@ -17,19 +17,21 @@ exports.getUser = (req, res, next)  =>{
 
     User.findOne({ username: cUser}, (err, foundUser) => {
         if (foundUser) {
-            res.json(foundUser)
+            const token = jwt.sign({id: cUser}, process.env.SECRET, {
+                expiresIn: 10000
+            })
+            res.json(token)       // Send the toekn to the requester
+            console.log(token);
         } else {
             res.send("No user matching the username found")
         }
     })
 
-    const token = jwt.sign({id: cUser.username}, process.env.SECRET, {
-        expiresIn: 10000
-    })
+    
     // res.status(200).json({ tokne: token, cUser})   Cannot set headers after they are sent to the client
 
-    console.log(token)
-
 }
+
+
 
 exports.updateUser = (req, res, netxt) =>{}
