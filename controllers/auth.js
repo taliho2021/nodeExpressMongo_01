@@ -95,8 +95,8 @@ exports.signin = (req, res) => {
         });
       }
 
-      var token = jwt.sign({ id: user.id }, process.env.SECRET, {
-        expiresIn: 86400 // 24 hours
+      const token = jwt.sign({ id: user.id }, process.env.SECRET, {
+        expiresIn: 5000 // 5 seconds
       });
 
       var authorities = [];

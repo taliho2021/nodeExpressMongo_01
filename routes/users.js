@@ -1,22 +1,27 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../models/User')
+const userController = require('../controllers/users')
 
-// Gettting all users
-router.get('/', async (req, res) => {
-    try {
-       const users = await User.find()
-       res.json(users)
-    } catch (err) {
-    res.status(500).json({ message: err.message})
-    }
-})
+router.get('/', userController.getUsers)
 
-//Getting one user
-router.get('/:id', (req, res) => {
-    res.send('Get all user route')
+router.get('/:username', userController.getUser)
 
-})
+// // Gettting all users.  MOVED all logic to controllers.user file
+// router.get('/', async (req, res) => {
+//     try {
+//        const users = await User.find()
+//        res.json(users)
+//     } catch (err) {
+//     res.status(500).json({ message: err.message})
+//     }
+// })
+
+// //Getting one user
+// router.get('/:id', (req, res) => {
+//     res.send('Get all user route')
+
+// })
 //Creating user
 router.post('/', async(req, res) => {
     const user = new User({
@@ -58,8 +63,8 @@ router.post('/register', async(req, res) => {
             res.status(400).send('All input is required')
         }
 
-        // Check is user already exist
-        // Validate is user exist in DB
+        // Check if user already exist
+        // Validate if user exist in DB
         const oldUser = await User.findOne({email})
 
         if (oldUser) {
