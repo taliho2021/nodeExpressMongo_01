@@ -1,7 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../models/User')
+const bcrypt = require('bcryptjs')
 const userController = require('../controllers/users')
+const jwt = require('jsonwebtoken')
 
 router.get('/', userController.getUsers)
 
@@ -56,7 +58,7 @@ router.post('/register', async(req, res) => {
     // Register logic starts here
     try{
         // Get user input
-        const { name, username, email, password } = rer.body
+        const { name, username, email, password } = req.body
 
         // Validate user input
         if (!(name && username && email && pawword)) {
@@ -84,7 +86,7 @@ router.post('/register', async(req, res) => {
 
         // Create token
         const token = jwt.sign(
-             {user_id: user_id, email },
+             {id: id, email },
              process.env.TOKEN_KEY, 
              {
                  expiresIn: '2h',
@@ -114,10 +116,10 @@ router.post('/login', async(req, res) =>{
         // Validate if user exist in DB
         const user = await User.findOne({ email })
 
-        if (user && (await bcrypt.compare(password, user.password))) {
+        if (user && (bcrypt.compare(password, user.password))) {
             // Create token
             const token = jwt.sign(
-                { user_id: user_id, email},
+                { email},
                 process.env.TOKEN_KEY,
                 {
                     expiresIn: '2h',
@@ -129,6 +131,8 @@ router.post('/login', async(req, res) =>{
 
             //user
             res.status(200).json(user)
+            console.log(token, user.token)
+            return
         }
         res.status(400).send('Invalid Credential')
     } catch (err) {
