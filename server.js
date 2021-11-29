@@ -29,73 +29,14 @@ db.once('open', () => console.log('Connected to MongoDB ANA Link Database'))
 app.use(express.json())
 app.use(cors())
 
-// Take a text password and create a hash
-
-const bcrypt = require("bcryptjs")
-
-const password = "mypass123"
-const saltRounds = 10
-
-bcrypt.genSalt(saltRounds, function (saltError, salt) {
-  if (saltError) {
-    throw saltError
-  } else {
-    bcrypt.hash(password, salt, function(hashError, hash) {
-      if (hashError) {
-        throw hashError
-      } else {
-        console.log(hash)
-        //$2a$10$FEBywZh8u9M0Cec/0mWep.1kXrwKeiWDba6tdKvDfEBjyePJnDT7K
-      }
-    })
-  }
-})
 
 app.get('/', (req, res) =>{
     let today = new Date()
     res.render('home', {todayDate: today})
 })
 
-// Create 3 rows in roles collection 
-
-function initial(){
-  Role.estimatedDocumentCount((err, count) => {
-    if (!err && count === 0) {
-      new Role({
-        name: 'user'
-      }).save(err => {
-        if (err) {
-          console.log('error', err)
-        }
-        console.log("added 'user' to roles collection" )
-      })
-
-      new Role({
-        name: 'moderator'
-      }).save (err => {
-        if (err) {
-          console.log('error', err)
-        }
-        console.log("added 'moderator' to roles collection")
-      }) 
-
-      new Role({
-        name: 'admin'
-      }).save (err => {
-        if (err) {
-          console.log('error', err)
-        }
-        console.log("added 'admin' to roles collection")
-      }) 
-      
-    }
-  })
-}
-
-initial()
 
 // Define Routes
-// const usersRouter = require('./routes/users')
 app.use('/users', require('./routes/users'))
 app.use('/auth', require('./routes/auth'))
 app.use('/profile', require('./routes/profile'))
