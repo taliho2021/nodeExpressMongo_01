@@ -8,6 +8,9 @@ const app = express()
 const mongoose = require('mongoose')
 const cors = require('cors')
 const dm = require('./models')
+const session = require('express-session')
+
+const MongoStore = require('connect-mongo')(session)
 
 // Add EJS views.  Need to add after const app = express() has been loaded
 app.set('view engine', 'ejs')
@@ -25,10 +28,24 @@ db.once('open', () => console.log('Connected to MongoDB ANA Link Database'))
 
 // const Post = db.model(Post, postSchema)  - Cannot access 'Post' before initialization
 
-// Init Middleware
+// Initial global Middlewares
 app.use(express.json())
 app.use(cors())
 
+const sessionStore = new MongoStore({
+  mongooseConnection: mongoose.connection,
+  collecton: 'sessions'
+})
+
+app.use(session({
+  secret: 'some secret',
+  resave: false,
+  saveUninitialized: true,
+  store: sessionStore,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24
+  }
+}))
 // Take a text password and create a hash
 
 const bcrypt = require("bcryptjs")

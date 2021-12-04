@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user')
 const Role = require('../models/role')
 
+// Check if the token from the HTTP request is valid
+
 const verifyToken = (req, res, next) => {
   const token = 
     req.bodytoken || req.query.token || req.header['x-access-token']
@@ -21,6 +23,7 @@ jwt.verify(token, process.env.SECRET, (err, decoded) => {
   return next()
 }
 
+// Check if the user is admin and return a boolean value
 isAdmin = (req, res, next) => {
   User.findById(req.userId).exec((err, user) => {
     if (err) {
@@ -51,6 +54,8 @@ isAdmin = (req, res, next) => {
     );
   });
 };
+
+// Check if the user is a moderator and return a boolean valu
 
 isModerator = (req, res, next) => {
   User.findById(req.userId).exec((err, user) => {

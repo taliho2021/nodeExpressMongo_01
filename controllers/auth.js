@@ -7,13 +7,16 @@ const Role = require('../models/role');
 
 
 exports.signup = (req, res) => {
-  const user = new User({
+
+  // Create an user object with hashed password
+  const newUser = new User({
     username: req.body.username,
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8)
   });
 
-  user.save((err, user) => {
+  //Save user in the database
+  newUser.save((err, user) => {
     if (err) {
       res.status(500).send({ message: err });
       return;
@@ -69,10 +72,11 @@ exports.signin = (req, res) => {
       message:'Validation failed!',
       errors: errors.array()})
   }
+  
   User.findOne({
     username: req.body.username
   })
-    .populate("roles", "-__v")
+    .populate("roles", "-__v") 
     .exec((err, user) => {
       if (err) {
         res.status(500).send({ message: err });

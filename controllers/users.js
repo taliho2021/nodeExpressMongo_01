@@ -20,7 +20,7 @@ exports.getUser = (req, res, next)  =>{
             const token = jwt.sign({id: cUser}, process.env.SECRET, {
                 expiresIn: 10000
             })
-            res.json(token)       // Send the toekn to the requester
+            res.json(token)       // Send the token to the requester
             console.log(token);
         } else {
             res.send("No user matching the username found")
