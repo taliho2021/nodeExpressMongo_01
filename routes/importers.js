@@ -15,6 +15,9 @@ router.get('/:clientId', importController.getImporter)
 // Update an importer with clientId
 router.put('/:clientId', importController.updateImporter)
 
+
+router.get('/admin', importController.adminBoard)
+router.get('/mod',  importController.moderatorBoard)
 module.exports = router
 
 

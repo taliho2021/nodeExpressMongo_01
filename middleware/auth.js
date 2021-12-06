@@ -1,6 +1,8 @@
+const express = require('express')
 const cors = require('cors')
 const passport = require('passport')
 const path = require('path')
+const User = require('../models/user')
 
 /**
  * -------------- GENERAL SETUP ----------------
@@ -10,11 +12,12 @@ const path = require('path')
 require('dotenv').config();
 
 // Must first load the models
-require('./models/user');
+require('../models/user');
 
 // Pass the global passport object into the configuration function
-require('./config/passport')(passport);
+require('../config/passport')(passport);
 
+const app = express()
 // This will initialize the passport object on every request
 app.use(passport.initialize());
 
@@ -28,7 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
  */
 
 // Imports all of the routes from ./routes/index.js
-app.use(require('./routes'));
+app.use(require('../routes/users'));
 
 module.exports = function (req, res, next) {
     // Get token from header

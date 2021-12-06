@@ -1,48 +1,44 @@
 const express = require('express')
 const router = express.Router()
-const User = require('../models/User')
-const bcrypt = require('bcryptjs')
 const userController = require('../controllers/users')
-const jwt = require('jsonwebtoken')
 
+const jwt = require('jsonwebtoken')
+const User = require('../models/user')
+const bcrypt = require('bcryptjs')
+
+// Get all users
 router.get('/', userController.getUsers)
 
+router.get('/users/admin', userController.adminBoard)
+router.get('/users/moderator', userController.moderatorBoard)
+
+// Get one user  (All logic moved to controller.)
 router.get('/:username', userController.getUser)
 
-// // Gettting all users.  MOVED all logic to controllers.user file
-// router.get('/', async (req, res) => {
-//     try {
-//        const users = await User.find()
-//        res.json(users)
+//Creating user - Logic should be moved to controllers/users
+router.post('/', userController.addOneUser)
+
+// router.post('/', async(req, res) => {
+//     const user = new User({
+//        name: req.body.name,
+//        username: req.body.username,
+//        email: req.body.email,
+//        password: req.body.password,
+//        roles: req.body.roles,
+//        date: new Date()
+//     })
+//     try{
+//       const newUser = await user.save()
+//       console.log('Saved user to DB', newUser)
+//       res.status(201).json(newUser)
 //     } catch (err) {
-//     res.status(500).json({ message: err.message})
+//         res.status(400).json({message: err.message})
+
 //     }
 // })
+// router.get('/users/admin', userController.adminBoard)
+// router.get('/users/moderator', userController.moderatorBoard)
 
-// //Getting one user
-// router.get('/:id', (req, res) => {
-//     res.send('Get all user route')
-
-// })
-//Creating user
-router.post('/', async(req, res) => {
-    const user = new User({
-       name: req.body.name,
-       username: req.body.username,
-       email: req.body.email,
-       password: req.body.password,
-       roles: req.body.roles,
-       date: new Date()
-    })
-    try{
-      const newUser = await user.save()
-      console.log('Saved user to DB', newUser)
-      res.status(201).json(newUser)
-    } catch (err) {
-        res.status(400).json({message: err.message})
-
-    }
-})
 //Updating one
 router.patch('/:id', (req, res) => {
      res.send('Patch route works')
@@ -106,11 +102,12 @@ router.post('/login', async(req, res) =>{
     // Login logic starts here
     try {
         // Get user input
-        const { email, password } = req.body
-
+        const email = req.body.email
+        const password = req.body.password
+        console.log(email, password)
         // Validate user input
         if (!(email && password)) {
-            res.status(400).send('All input is required')
+            res.status(400).send('Email & Password are required')
         }
 
         // Validate if user exist in DB
@@ -134,7 +131,6 @@ router.post('/login', async(req, res) =>{
             console.log(token, user.token)
             return
         }
-        res.status(400).send('Invalid Credential')
     } catch (err) {
         console.log(err);
     }

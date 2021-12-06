@@ -20,8 +20,8 @@ exports.getUser = (req, res, next)  =>{
             const token = jwt.sign({id: cUser}, process.env.SECRET, {
                 expiresIn: 10000
             })
-            res.json(token)       // Send the token to the requester
-            console.log(token);
+            res.json(foundUser)       // Send the token to the requester
+            console.log(token, foundUser);
         } else {
             res.send("No user matching the username found")
         }
@@ -32,15 +32,31 @@ exports.getUser = (req, res, next)  =>{
 
 }
 
+exports.addOneUser = (async (req,res, next) =>{
+    const user = new User({
+        name: req.body.name,
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password,
+        roles: req.body.roles,
+        date: new Date()
+     })
+     
+     try{
+       const newUser = await user.save()
+       console.log('Saved user to DB', newUser)
+       res.status(201).json(newUser)
+     } catch (err) {
+         res.status(400).json({message: err.message})
+     }
+})
   
-exports.adminBoard = (req, res) => {
+exports.adminBoard = function(req, res)  {
     res.status(200).send("Admin Content.");
 };
   
-exports.moderatorBoard = (req, res) => {
-    res.status(200).send("Moderator Content.");
+exports.moderatorBoard = function (req, res) {
+    res.status(200).send("Moderator Content.")
 };
-
-
 
 exports.updateUser = (req, res, netxt) =>{}

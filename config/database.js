@@ -25,7 +25,7 @@ if (process.env.NODE_ENV === 'production') {
     });
 
     mongoose.connection.on('connected', () => {
-        console.log('Database connected');
+        console.log('Connected to ANA Link Database on MongoDB in production mode');
     });
 } else {
     mongoose.connect(devConnection, {
@@ -34,6 +34,6 @@ if (process.env.NODE_ENV === 'production') {
     });
 
     mongoose.connection.on('connected', () => {
-        console.log('Database connected');
+        console.log('Connected to ANA Link Database on MongoDB in development mode');
     });
 }

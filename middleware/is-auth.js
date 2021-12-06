@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const User = require('../models/user')
+const User = require('../models/User')
 const Role = require('../models/role')
 
 // Check if the token from the HTTP request is valid

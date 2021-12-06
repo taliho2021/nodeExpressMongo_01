@@ -1,75 +1,44 @@
-if (process.env.NODE_ENV !== 'production'){
-require('dotenv').config()
-}
-
 const express = require('express')
 const path = require('path')
-const app = express()
-const mongoose = require('mongoose')
+const passport = require('passport')
 const cors = require('cors')
-const dm = require('./models')
-const session = require('express-session')
 
-const MongoStore = require('connect-mongo')(session)
+/**
+ * --------- GENERAL SETUP ------------
+ */
+
+// Gives access to variables set in the .env file via `process.env.VARIABLE_NAME` syntax
+require('dotenv').config()
+
+// Create the Express application
+const app = express()
+
+// Configure the database and opens a global connection that can be usaed in any module with `mongoose.connection`
+require('./config/database')
 
 // Add EJS views.  Need to add after const app = express() has been loaded
 app.set('view engine', 'ejs')
 
-// Connect Database
-mongoose.connect(process.env.DATABASE_URL, {
-  useNewUrlParser: true, 
-  useUnifiedTopology: true})
+// Must first load the models
+require('./models/user')
+require('./models/importer')
 
-const db = mongoose.connection
-const Role = dm.role
+// This will initialize the passport object on every request
+app.use(passport.initialize())
 
-db.on('error', (error) => console.error(error))
-db.once('open', () => console.log('Connected to MongoDB ANA Link Database'))
 
-// const Post = db.model(Post, postSchema)  - Cannot access 'Post' before initialization
-
-// Initial global Middlewares
+// Initialize  global middleware, instead of using body-parser middleware, use the new Express implementation of the same thing.
 app.use(express.json())
+app.use(express.urlencoded({ extended: true}))
+
+//Allows Angular applicaitons to make HTTp reuests to Express applicaiton
 app.use(cors())
 
-<<<<<<< HEAD
-const sessionStore = new MongoStore({
-  mongooseConnection: mongoose.connection,
-  collecton: 'sessions'
-})
+// Where Angular builds to - In the ./angular/angular.json file, you will find this configuration
+// at the property: projects.angular.architect.build.options.outputPath
+// When you run `ng build`, the output will go to the ./public directory
+app.use(express.static(path.join(__dirname, 'public')))
 
-app.use(session({
-  secret: 'some secret',
-  resave: false,
-  saveUninitialized: true,
-  store: sessionStore,
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24
-  }
-}))
-// Take a text password and create a hash
-
-const bcrypt = require("bcryptjs")
-
-const password = "mypass123"
-const saltRounds = 10
-
-bcrypt.genSalt(saltRounds, function (saltError, salt) {
-  if (saltError) {
-    throw saltError
-  } else {
-    bcrypt.hash(password, salt, function(hashError, hash) {
-      if (hashError) {
-        throw hashError
-      } else {
-        console.log(hash)
-        //$2a$10$FEBywZh8u9M0Cec/0mWep.1kXrwKeiWDba6tdKvDfEBjyePJnDT7K
-      }
-    })
-  }
-})
-=======
->>>>>>> e6cca6980f49ed3ae7040b59c62bc6761f6753b6
 
 app.get('/', (req, res) =>{
     let today = new Date()
@@ -80,7 +49,6 @@ app.get('/', (req, res) =>{
 // Define Routes
 app.use('/users', require('./routes/users'))
 app.use('/auth', require('./routes/auth'))
-app.use('/profile', require('./routes/profile'))
 app.use('/posts', require('./routes/posts'))
 app.use('/importers', require('./routes/importers'))
 
