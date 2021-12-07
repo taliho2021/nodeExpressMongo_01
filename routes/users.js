@@ -9,35 +9,14 @@ const bcrypt = require('bcryptjs')
 // Get all users
 router.get('/', userController.getUsers)
 
-router.get('/users/admin', userController.adminBoard)
-router.get('/users/moderator', userController.moderatorBoard)
+router.get('/admin', userController.adminBoard)
+router.get('/moderator', userController.moderatorBoard)
 
 // Get one user  (All logic moved to controller.)
 router.get('/:username', userController.getUser)
 
 //Creating user - Logic should be moved to controllers/users
 router.post('/', userController.addOneUser)
-
-// router.post('/', async(req, res) => {
-//     const user = new User({
-//        name: req.body.name,
-//        username: req.body.username,
-//        email: req.body.email,
-//        password: req.body.password,
-//        roles: req.body.roles,
-//        date: new Date()
-//     })
-//     try{
-//       const newUser = await user.save()
-//       console.log('Saved user to DB', newUser)
-//       res.status(201).json(newUser)
-//     } catch (err) {
-//         res.status(400).json({message: err.message})
-
-//     }
-// })
-// router.get('/users/admin', userController.adminBoard)
-// router.get('/users/moderator', userController.moderatorBoard)
 
 //Updating one
 router.patch('/:id', (req, res) => {
@@ -98,20 +77,21 @@ router.post('/register', async(req, res) => {
     }
 })
 
-router.post('/login', async(req, res) =>{
+router.post('/login', (req, res) =>{
     // Login logic starts here
-    try {
+    
         // Get user input
         const email = req.body.email
         const password = req.body.password
-        console.log(email, password)
+        //console.log(email, password)
+        console.log(req.body.email, req.body.password)
         // Validate user input
         if (!(email && password)) {
             res.status(400).send('Email & Password are required')
         }
 
         // Validate if user exist in DB
-        const user = await User.findOne({ email })
+        const user = User.findOne({ email })
 
         if (user && (bcrypt.compare(password, user.password))) {
             // Create token
@@ -131,10 +111,9 @@ router.post('/login', async(req, res) =>{
             console.log(token, user.token)
             return
         }
-    } catch (err) {
-        console.log(err);
+
     }
-})
+)
 
 
-module.exports = router
+module.exports = router;

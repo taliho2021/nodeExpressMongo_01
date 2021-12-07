@@ -52,11 +52,11 @@ exports.addOneUser = (async (req,res, next) =>{
 })
   
 exports.adminBoard = function(req, res)  {
-    res.status(200).send("Admin Content.");
+    res.status(200).send("ANA Link Admin Board");
 };
   
 exports.moderatorBoard = function (req, res) {
-    res.status(200).send("Moderator Content.")
+    res.status(200).send("Moderator Contect for ANA Link, Ltd.")
 };
 
 exports.updateUser = (req, res, netxt) =>{}
