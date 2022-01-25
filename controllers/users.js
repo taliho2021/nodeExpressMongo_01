@@ -59,4 +59,4 @@ exports.moderatorBoard = function (req, res) {
     res.status(200).send("Moderator Content.")
 };
 
-exports.updateUser = (req, res, netxt) =>{}
+exports.updateUser = (req, res, next) =>{}
