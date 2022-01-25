@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const User = require('../models/User')
+const User = require('../models/user')
 const Role = require('../models/role')
 
 // Check if the token from the HTTP request is valid
@@ -13,14 +13,14 @@ const verifyToken = (req, res, next) => {
     return res.status(403).send('A token is required for authentication')
   }
 
-jwt.verify(token, process.env.SECRET, (err, decoded) => {
-  if (err) {
-    return res.status(401).send({message: 'Unauthorized!'})
-  }
-  req.userId = decoded.id;
-})
-  
-  return next()
+  jwt.verify(token, process.env.SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).send({message: 'Unauthorized!'})
+    }
+    req.userId = decoded.id;
+  })
+    
+  next()
 }
 
 // Check if the user is admin and return a boolean value
@@ -94,27 +94,3 @@ const authJwt = {
   isModerator
 };
 module.exports = authJwt;
-
-// module.exports = (req, res, next) => {
-//   const authHeader = req.get('Authorization');
-//   if (!authHeader) {
-//     const error = new Error('Not authenticated.');
-//     error.statusCode = 401;
-//     throw error;
-//   }
-//   const token = authHeader.split(' ')[1];
-//   let decodedToken;
-//   try {
-//     decodedToken = jwt.verify(token, 'somesupersecretsecret');
-//   } catch (err) {
-//     err.statusCode = 500;
-//     throw err;
-//   }
-//   if (!decodedToken) {
-//     const error = new Error('Not authenticated.');
-//     error.statusCode = 401;
-//     throw error;
-//   }
-//   req.userId = decodedToken.userId;
-//   next();
-// };

@@ -6,11 +6,16 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 const bcrypt = require('bcryptjs')
 
+const app = express()
+// Use isAuth middleware to protect routes.  Routes are not accessible without the authroizaiton
+const isAuth = require('../middleware/is-auth')
+app.use(isAdmin)
+
 // Get all users
 router.get('/', userController.getUsers)
 
-router.get('/users/admin', userController.adminBoard)
-router.get('/users/moderator', userController.moderatorBoard)
+router.get('/admin', isAdmin, userController.adminBoard)
+router.get('/moderator', isAdmin, userController.moderatorBoard)
 
 // Get one user  (All logic moved to controller.)
 router.get('/:username', userController.getUser)
@@ -18,26 +23,6 @@ router.get('/:username', userController.getUser)
 //Creating user - Logic should be moved to controllers/users
 router.post('/', userController.addOneUser)
 
-// router.post('/', async(req, res) => {
-//     const user = new User({
-//        name: req.body.name,
-//        username: req.body.username,
-//        email: req.body.email,
-//        password: req.body.password,
-//        roles: req.body.roles,
-//        date: new Date()
-//     })
-//     try{
-//       const newUser = await user.save()
-//       console.log('Saved user to DB', newUser)
-//       res.status(201).json(newUser)
-//     } catch (err) {
-//         res.status(400).json({message: err.message})
-
-//     }
-// })
-// router.get('/users/admin', userController.adminBoard)
-// router.get('/users/moderator', userController.moderatorBoard)
 
 //Updating one
 router.patch('/:id', (req, res) => {
@@ -49,7 +34,7 @@ router.delete('/:id', (req, res) => {
      res.send('Delete route works')
 })
 
-router.post('/register', async(req, res) => {
+router.post('/register', isAdmin, async(req, res) => {
 
     // Register logic starts here
     try{
@@ -128,8 +113,10 @@ router.post('/login', async(req, res) =>{
 
             //user
             res.status(200).json(user)
-            console.log(token, user.token)
+            console.log(user.token)
             return
+        } else {
+            console.log("No user found!")
         }
     } catch (err) {
         console.log(err);
