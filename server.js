@@ -13,7 +13,7 @@ require('dotenv').config()
 // Create the Express application
 const app = express()
 
-// Configure the database and opens a global connection that can be usaed in any module with `mongoose.connection`
+// Configure the database and opens a global connection that can be used in any module with `mongoose.connection`
 require('./config/database')
 
 // Add EJS views.  Need to add after const app = express() has been loaded
@@ -22,6 +22,9 @@ app.set('view engine', 'ejs')
 // Must first load the models
 require('./models/user')
 require('./models/importer')
+
+// Pass the global passport object into the configuration function - Added on 2/25/22
+require('./config/passport')(passport);
 
 // This will initialize the passport object on every request
 app.use(passport.initialize())
