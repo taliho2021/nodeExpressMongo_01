@@ -56,7 +56,7 @@ exports.adminBoard = function(req, res)  {
 };
   
 exports.moderatorBoard = function (req, res) {
-    res.status(200).send("Moderator Contect for ANA Link, Ltd.")
+    res.status(200).send("Moderator Content for ANA Link, Ltd.")
 };
 
 exports.updateUser = (req, res, netxt) =>{}
