@@ -83,7 +83,7 @@ router.post('/register', isAdmin, async(req, res) => {
     }
 })
 
-router.post('/login', async(req, res) =>{
+router.post('/login', async(req, res, next) =>{
     // Login logic starts here
     try {
         // Get user input
@@ -113,10 +113,12 @@ router.post('/login', async(req, res) =>{
 
             //user
             res.status(200).json(user)
+            console.log('Connected to the server with proper credential and issued the JWT token')
             console.log(user.token)
             return
         } else {
-            console.log("No user found!")
+            console.log("No user found!");
+            next()
         }
     } catch (err) {
         console.log(err);

@@ -27,9 +27,6 @@ exports.getUser = (req, res, next)  =>{
         }
     })
 
-    
-    // res.status(200).json({ tokne: token, cUser})   Cannot set headers after they are sent to the client
-
 }
 
 exports.addOneUser = (async (req,res, next) =>{
