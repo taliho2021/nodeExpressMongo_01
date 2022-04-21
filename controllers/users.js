@@ -1,5 +1,6 @@
 const {validationResult } = require('express-validator')
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs')
 
 const User = require('../models/user')
 
@@ -58,5 +59,42 @@ exports.adminBoard = function(req, res)  {
 exports.moderatorBoard = function (req, res) {
     res.status(200).send("Moderator Contect for ANA Link, Ltd.")
 };
+
+// exports.login = ((req, res) => {
+//         // Login logic starts here
+//         // Get user input
+//         const email = req.body.email
+//         const password = req.body.password
+//         //console.log(email, password)
+//         console.log(req.body.email, req.body.password)
+//         // Validate user input
+//         if (!(email && password)) {
+//             res.status(400).send('Email & Password are required')
+//         }
+
+//         // Validate if user exist in DB
+//         const user = User.findOne({ email })
+
+//         if (user && (bcrypt.compare(password, user.password))) {
+//             // Create token
+//             const token = jwt.sign(
+//                 { email },
+//                 process.env.TOKEN_KEY,
+//                 {
+//                     expiresIn: '2h',
+//                 }
+//             )
+
+//             // save user token
+//             user.token = token
+
+//             //user
+//             res.status(200).json(user)
+//             console.log(token, user.token)
+//             return
+//         }
+
+//     }
+// )
 
 exports.updateUser = (req, res, netxt) =>{}

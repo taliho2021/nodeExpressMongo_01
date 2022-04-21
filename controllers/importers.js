@@ -13,7 +13,7 @@ exports.getImporters = (async(req, res, next) => {
 })
 
 exports.getImporter= (req, res, next ) =>{
-        const cId = req.params.clientId
+        const cId = req.params.clientId.toUpperCase()
 
         Importer.findOne({clientId: cId}, (err, foundImporter) => {
             if (foundImporter) {

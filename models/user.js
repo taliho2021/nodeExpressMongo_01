@@ -12,7 +12,10 @@ const userSchema = new mongoose.Schema({
         ref: 'Role'
       }
     ],
-    date: Date,
+    date: {
+      type: Date,
+      default: Date.now
+    }
 })
 
 // //hash the password
@@ -27,7 +30,7 @@ userSchema.methods.validPassword = function(password) {
 
 userSchema.pre("save", function (next) {
     const user = this
-  
+    console.log('Hello form user pre save')
     if (this.isModified("password") || this.isNew) {
       bcrypt.genSalt(10, function (saltError, salt) {
         if (saltError) {
