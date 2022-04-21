@@ -1,0 +1,4 @@
+runtime: nodejs16
+
+env_variables:
+  GCLOUT_STORAGE_BUCKET: test_node01
