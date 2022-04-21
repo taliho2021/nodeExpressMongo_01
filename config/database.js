@@ -17,7 +17,7 @@ require('dotenv').config();
 const devConnection = process.env.DATABASE_URL;
 const prodConnection = process.env.DATABASE_URL;
 
-console.log(process.env)
+// console.log(process.env)
 
 // Connect to the correct environment database
 if (process.env.NODE_ENV === 'production') {

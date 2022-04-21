@@ -55,7 +55,7 @@ isAdmin = (req, res, next) => {
   });
 };
 
-// Check if the user is a moderator and return a boolean valu
+// Check if the user is a moderator and return a boolean value
 
 isModerator = (req, res, next) => {
   User.findById(req.userId).exec((err, user) => {

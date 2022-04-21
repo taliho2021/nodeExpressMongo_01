@@ -97,4 +97,4 @@ exports.moderatorBoard = function (req, res) {
 //     }
 // )
 
-exports.updateUser = (req, res, netxt) =>{}
+exports.updateUser = (req, res, next) =>{}

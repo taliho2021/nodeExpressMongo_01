@@ -4,8 +4,17 @@ const bcrypt = require('bcryptjs')
 const userSchema = new mongoose.Schema({
     name: String,
     username: String,
-    email: String,
-    password: String,
+    email: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    
+    password: {
+      type: String,
+      required: true
+    },
+
     roles: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -28,9 +37,11 @@ userSchema.methods.validPassword = function(password) {
     return bcrypt.compareSync(password, this.passowrd)
 }
 
-userSchema.pre("save", function (next) {
+// pre-hook.  Before the user info is saved in db, this fxn will be called, get plain text, salt it, hash it and store it.  this refers to current doc about to be saved
+
+userSchema.pre("save", function (next) {                
     const user = this
-    console.log('Hello form user pre save')
+
     if (this.isModified("password") || this.isNew) {
       bcrypt.genSalt(10, function (saltError, salt) {
         if (saltError) {
@@ -51,6 +62,8 @@ userSchema.pre("save", function (next) {
     }
   })
   
+  // next() moves to the next middleware. Make the user tyring to log in has the correct credentials.
+
   userSchema.methods.comparePassword = function(password, callback) {
     bcrypt.compare(password, this.password, function(error, isMatch) {
       if (error) {

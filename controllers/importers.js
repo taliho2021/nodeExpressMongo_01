@@ -19,7 +19,7 @@ exports.getImporter= (req, res, next ) =>{
             if (foundImporter) {
                 res.json(foundImporter)
             } else {
-                res.send('No importer matching Id found')
+                res.send(err, 'No importer matching Id found')
             }
         });
     }
