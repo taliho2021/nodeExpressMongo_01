@@ -1,5 +1,5 @@
 const JwtStrategy = require('passport-jwt').Strategy
-const ExtractJwt = require('passport-jwt').ExtractJwt;
+const ExtractJwt = require('passport-jwt').ExtractJwt;   // From HTTP header
 const fs = require('fs');
 const path = require('path');
 const User = require('mongoose').model('User');
