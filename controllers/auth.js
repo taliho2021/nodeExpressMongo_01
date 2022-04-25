@@ -6,7 +6,7 @@ const User = require('../models/user');
 const Role = require('../models/role');
 
 
-exports.signup = (req, res) => {
+exports.signup = (req, res, next) => {
 
   // Create an user object with hashed password
   const newUser = new User({
