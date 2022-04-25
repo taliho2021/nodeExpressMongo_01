@@ -42,34 +42,38 @@ exports.updateImporter = ((req, res, next) => {
     const website = req.body.website
     const email1 = req.body.email1
 
-    Importer.findOne({cliendtId: cId}, (err, foundImporter)
-        .then(foundImporter => {
-            if (!foundImporter) {
-                const error = new Error('Not authorized!')
-                error.statusCode = 403
-                throw error
-            }
-            foundImporter.name = name
-            foundImporter.address1 = address1
-            foundImporter.address2 = address2
-            foundImporter.city = city
-            foundImporter.state = state
-            foundImporter.country = country
-            foundImporter.phone1 = phone1
-            foundImporter.website = website
-            foundImporter.email1 = emnail1
-            return foundImporter.save()
-        })
-        .then(result =>{
-            res.status(200).json({message: 'Importer updated', foundImporter: result})
-        })
-        .catch(err => {
-            if (!err.statusCode){
-                err.statusCode = 500
-            }
-            next(err)
-        })
-)})
+    res.send({messafe: 'Importer updated'})
+    next()
+
+//     Importer.findOneAndUpdate ({cliendtId: cId}, (err, foundImporter)
+//         .then(foundImporter => {
+//             if (!foundImporter) {
+//                 const error = new Error('Not authorized!')
+//                 error.statusCode = 403
+//                 throw error
+//             }
+//             foundImporter.name = name
+//             foundImporter.address1 = address1
+//             foundImporter.address2 = address2
+//             foundImporter.city = city
+//             foundImporter.state = state
+//             foundImporter.country = country
+//             foundImporter.phone1 = phone1
+//             foundImporter.website = website
+//             foundImporter.email1 = emnail1
+//             return foundImporter.save()
+//         })
+//         .then(result =>{
+//             res.status(200).json({message: 'Importer updated', foundImporter: result})
+//         })
+//         .catch(err => {
+//             if (!err.statusCode){
+//                 err.statusCode = 500
+//             }
+//             next(err)
+//         })
+// )
+})
 
 // Add a new importer to DB
 exports.addImporter = (async (req, res, next ) => {

@@ -22,7 +22,7 @@ router.post('/login', function(req, res, next){
             // Function defined at bottom of app.js
             const isValid = utils.validPassword(req.body.password, user.hash, user.salt);
             
-            // If username and hashed password match, issue the JWT and send it back
+            // If username and hashed password match, issue the JWT and send it to front-end
             if (isValid) {
 
                 const tokenObject = utils.issueJWT(user);
@@ -69,18 +69,20 @@ router.post('/register', function(req, res, next){
 
 });
 
+const userController = require('../controllers/users')
+router.get('/', userController.getUsers)
+
 module.exports = router;
 
 
 
-const userController = require('../controllers/users')
 
 // const jwt = require('jsonwebtoken')
 // const User = require('../models/user')
 // const bcrypt = require('bcryptjs')
 
 // // Get all users
-router.get('/', userController.getUsers)
+
 
 // router.get('/admin', userController.adminBoard)
 // router.get('/moderator', userController.moderatorBoard)

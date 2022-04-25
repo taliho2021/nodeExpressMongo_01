@@ -5,7 +5,7 @@ const Role = require('../models/role')
 
 // Check if the token from the HTTP request is valid
 
-const verifyToken = (req, res, next) => {
+verifyToken = (req, res, next) => {
   const token = 
     req.bodytoken || req.query.token || req.header['x-access-token']
 
@@ -13,14 +13,14 @@ const verifyToken = (req, res, next) => {
     return res.status(403).send('A token is required for authentication')
   }
 
-jwt.verify(token, process.env.SECRET, (err, decoded) => {
-  if (err) {
-    return res.status(401).send({message: 'Unauthorized!'})
-  }
-  req.userId = decoded.id;
-})
+  jwt.verify(token, process.env.SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).send({message: 'Unauthorized!'})
+    }
+    req.userId = decoded.id;
+    next();
+  })
   
-  return next()
 }
 
 // Check if the user is admin and return a boolean value

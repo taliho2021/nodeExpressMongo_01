@@ -6,13 +6,13 @@ const User = require('../models/user');
 const Role = require('../models/role');
 
 
-exports.signup = (req, res, next) => {
+exports.signup = (req, res) => {
 
   // Create an user object with hashed password
   const newUser = new User({
     username: req.body.username,
     email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8)
+    password: req.body.password
   });
 
   //Save user in the database
@@ -87,19 +87,19 @@ exports.signin = (req, res) => {
         return res.status(404).send({ message: "User Not found." });
       }
 
-      var passwordIsValid = bcrypt.compareSync(
-        req.body.password,
-        user.password
-      );
+      // const passwordIsValid = bcrypt.compareSync(
+      //   req.body.password,
+      //   user.password
+      // );
 
-      if (!passwordIsValid) {
-        return res.status(401).send({
-          accessToken: null,
-          message: "Invalid Password!"
-        });
-      }
+      // if (!passwordIsValid) {
+      //   return res.status(401).send({
+      //     accessToken: null,
+      //     message: "Invalid Password!"
+      //   });
+      // }
 
-      const token = jwt.sign({ id: user.id }, process.env.SECRET, {
+      const token = jwt.sign({ id: user._id }, process.env.SECRET, {
         expiresIn: '1h' // 1 hour
       });
 
