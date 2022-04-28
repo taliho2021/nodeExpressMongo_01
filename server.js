@@ -50,7 +50,7 @@ app.get('/', (req, res) =>{
 
 
 // Define Routes
-router.use('/users', require('./routes/users'))
+app.use('/users', require('./routes/users'))
 app.use('/auth', require('./routes/auth'))
 app.use('/posts', require('./routes/posts'))
 app.use('/importers', require('./routes/importers'))
