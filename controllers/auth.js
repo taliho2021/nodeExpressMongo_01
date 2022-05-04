@@ -1,6 +1,4 @@
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-const { check, validationResult } = require('express-validator')
 
 const User = require('../models/user');
 const Role = require('../models/role');
@@ -81,20 +79,8 @@ exports.signin = (req, res) => {
         return res.status(404).send({ message: "User Not found." });
       }
 
-      // const passwordIsValid = bcrypt.compareSync(
-      //   req.body.password,
-      //   user.password
-      // );
-
-      // if (!passwordIsValid) {
-      //   return res.status(401).send({
-      //     accessToken: null,
-      //     message: "Invalid Password!"
-      //   });
-      // }
-
       const token = jwt.sign({ id: user._id }, process.env.SECRET, {
-        expiresIn: '1h' // 1 hour
+        expiresIn: 86400 // 1 hour
       });
 
       var authorities = [];
