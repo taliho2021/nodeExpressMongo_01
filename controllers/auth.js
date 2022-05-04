@@ -1,113 +1,63 @@
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-const { check, validationResult } = require('express-validator')
+const  utils = require ('../lib/utils');
 
 const User = require('../models/user');
-const Role = require('../models/role');
 
 
 exports.signup = (req, res) => {
 
-  // Create an user object with hashed password
+  const saltHash = utils.genPassword(req.body.password);
+    
+  const salt = saltHash.salt;
+  const hash = saltHash.hash;
+
   const newUser = new User({
-    username: req.body.username,
-    email: req.body.email,
-    password: req.body.password
+      username: req.body.username,
+      hash: hash,
+      salt: salt
   });
 
-  //Save user in the database
-  newUser.save((err, user) => {
-    if (err) {
-      res.status(500).send({ message: err });
-      return;
-    }
-
-    if (req.body.roles) {
-      Role.find(
-        {
-          name: { $in: req.body.roles }
-        },
-        (err, roles) => {
-          if (err) {
-            res.status(500).send({ message: err });
-            return;
-          }
-
-          user.roles = roles.map(role => role._id);
-          user.save(err => {
-            if (err) {
-              res.status(500).send({ message: err });
-              return;
-            }
-
-            res.send({ message: "User was registered successfully!" });
+  try {
+  
+      newUser.save()
+          .then((user) => {
+              res.json({ success: true, user: user });
           });
-        }
-      );
-    } else {
-      Role.findOne({ name: "user" }, (err, role) => {
-        if (err) {
-          res.status(500).send({ message: err });
-          return;
-        }
 
-        user.roles = [role._id];
-        user.save(err => {
-          if (err) {
-            res.status(500).send({ message: err });
-            return;
-          }
+  } catch (err) {
+      
+      res.json({ success: false, msg: err });
+  
+  }
 
-          res.send({ message: "User was registered successfully!" });
-        });
-      });
-    }
-  });
 };
 
-exports.signin = (req, res) => {
+exports.signin = (req, res, next) => {
   
-  User.findOne({
-    username: req.body.username
-  })
-    .populate("roles", "-__v") 
-    .exec((err, user) => {
-      if (err) {
-        res.status(500).send({ message: err });
-        return;
-      }
+  User.findOne({ username: req.body.username })
+        .then((user) => {
 
-      if (!user) {
-        return res.status(404).send({ message: "User Not found." });
-      }
+            if (!user) {
+                return res.status(401).json({ success: false, msg: "could not find user" });
+            }
+            
+            // Function defined at bottom of app.js
+            const isValid = utils.validPassword(req.body.password, user.hash, user.salt);
+            
+            if (isValid) {
 
-      // const passwordIsValid = bcrypt.compareSync(
-      //   req.body.password,
-      //   user.password
-      // );
+                const tokenObject = utils.issueJWT(user);
 
-      // if (!passwordIsValid) {
-      //   return res.status(401).send({
-      //     accessToken: null,
-      //     message: "Invalid Password!"
-      //   });
-      // }
+                res.status(200).json({ success: true, token: tokenObject.token, expiresIn: tokenObject.expires });
 
-      const token = jwt.sign({ id: user._id }, process.env.SECRET, {
-        expiresIn: '1h' // 1 hour
-      });
+            } else {
 
-      var authorities = [];
+                res.status(401).json({ success: false, msg: "you entered the wrong password" });
 
-      for (let i = 0; i < user.roles.length; i++) {
-        authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
-      }
-      res.status(200).send({
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        roles: authorities,
-        accessToken: token
-      });
-    });
+            }
+
+        })
+        .catch((err) => {
+            next(err);
+        });
 };
