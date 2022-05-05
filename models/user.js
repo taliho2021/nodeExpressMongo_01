@@ -9,10 +9,9 @@ const userSchema = new mongoose.Schema({
       unique: true
     },
     
-    password: {
-      type: String,
-    },
-
+    salt: String,
+    hash: String,
+    
     roles: [
       {
         type: mongoose.Schema.Types.ObjectId,
