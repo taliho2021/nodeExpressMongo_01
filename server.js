@@ -43,13 +43,18 @@ app.use(cors())
 app.use(express.static(path.join(__dirname, 'public')))
 
 
+// Home route
 app.get('/', (req, res) =>{
     let today = new Date()
     res.render('home', {todayDate: today})
 })
 
+app.get('/heroes', (req, res) =>{
+  res.render('heroes')
+})
 
-// Define Routes
+
+// Define Routes - 4 routes
 app.use('/users', require('./routes/users'))
 app.use('/auth', require('./routes/auth'))
 app.use('/posts', require('./routes/posts'))
