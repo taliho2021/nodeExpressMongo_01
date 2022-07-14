@@ -49,6 +49,13 @@ app.get('/', (req, res) =>{
     res.render('home', {todayDate: today})
 })
 
+app.get('/about', (req, res) =>{
+  let today = new Date()
+  res.render('about', {todayDate: today})
+})
+
+
+
 
 
 // Define Routes - 4 routes
