@@ -49,9 +49,6 @@ app.get('/', (req, res) =>{
     res.render('home', {todayDate: today})
 })
 
-app.get('/heroes', (req, res) =>{
-  res.render('heroes')
-})
 
 
 // Define Routes - 4 routes
