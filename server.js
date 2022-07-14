@@ -57,9 +57,9 @@ app.use('/auth', require('./routes/auth'))
 app.use('/posts', require('./routes/posts'))
 app.use('/importers', require('./routes/importers'))
 
-const PORT = process.env.PORT || 5000
+// const PORT = process.env.PORT || 5000
 
-app.listen(PORT, () => console.log(`Server started at localhost: ${PORT}`))
+app.listen(process.env.PORT || 5000)  // () => console.log(`Server started at localhost: ${PORT}`))
 
 // function initial() {
 //     Role.estimatedDocumentCount((err, count) => {
