@@ -49,9 +49,6 @@ app.get('/', (req, res) =>{
     res.render('home', {todayDate: today})
 })
 
-app.get('/heroes', (req, res) =>{
-  res.render('heroes')
-})
 
 
 // Define Routes - 4 routes
@@ -60,42 +57,42 @@ app.use('/auth', require('./routes/auth'))
 app.use('/posts', require('./routes/posts'))
 app.use('/importers', require('./routes/importers'))
 
-const PORT = process.env.PORT || 5000
+// const PORT = process.env.PORT || 5000
 
-app.listen(PORT, () => console.log(`Server started at localhost: ${PORT}`))
+app.listen(process.env.PORT || 5000)  // () => console.log(`Server started at localhost: ${PORT}`))
 
-function initial() {
-    Role.estimatedDocumentCount((err, count) => {
-      if (!err && count === 0) {
-        new Role({
-          name: "user"
-        }).save(err => {
-          if (err) {
-            console.log("error", err);
-          }
+// function initial() {
+//     Role.estimatedDocumentCount((err, count) => {
+//       if (!err && count === 0) {
+//         new Role({
+//           name: "user"
+//         }).save(err => {
+//           if (err) {
+//             console.log("error", err);
+//           }
   
-          console.log("added 'user' to roles collection");
-        });
+//           console.log("added 'user' to roles collection");
+//         });
   
-        new Role({
-          name: "moderator"
-        }).save(err => {
-          if (err) {
-            console.log("error", err);
-          }
+//         new Role({
+//           name: "moderator"
+//         }).save(err => {
+//           if (err) {
+//             console.log("error", err);
+//           }
   
-          console.log("added 'moderator' to roles collection");
-        });
+//           console.log("added 'moderator' to roles collection");
+//         });
   
-        new Role({
-          name: "admin"
-        }).save(err => {
-          if (err) {
-            console.log("error", err);
-          }
+//         new Role({
+//           name: "admin"
+//         }).save(err => {
+//           if (err) {
+//             console.log("error", err);
+//           }
   
-          console.log("added 'admin' to roles collection");
-        });
-      }
-    });
-  }
+//           console.log("added 'admin' to roles collection");
+//         });
+//       }
+//     });
+//   }
