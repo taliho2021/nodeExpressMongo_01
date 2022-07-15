@@ -54,6 +54,10 @@ app.get('/about', (req, res) =>{
   res.render('about', {todayDate: today})
 })
 
+app.get('/customers', (req, res) =>{
+  res.render('customers')
+})
+
 
 
 
@@ -64,12 +68,12 @@ app.use('/auth', require('./routes/auth'))
 app.use('/posts', require('./routes/posts'))
 app.use('/importers', require('./routes/importers'))
 
-const PORT = process.env.PORT 
+let PORT = process.env.PORT 
 
 if (PORT == null || PORT == "") {
   PORT = 8000
 }
-app.listen(PORT)  // () => console.log(`Server started at localhost: ${PORT}`))
+app.listen(PORT, () => console.log(`Server started at localhost: ${PORT}`))
 
 // function initial() {
 //     Role.estimatedDocumentCount((err, count) => {
