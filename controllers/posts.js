@@ -1,4 +1,4 @@
-const Importer = require('../models/post')
+const Post = require('../models/post')
 
 exports.getPosts = (async(req, res, next) => {
     try {
