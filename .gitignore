@@ -1,3 +1,5 @@
-.env
-node_modules
+/*.env
+/node_modules
 app.yaml
+.DS_Store
+npm-debug.log

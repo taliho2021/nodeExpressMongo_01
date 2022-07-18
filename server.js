@@ -46,17 +46,17 @@ app.use(express.static(path.join(__dirname, 'public')))
 // Home route
 app.get('/', (req, res) =>{   
 
-    // MOVE to lib/date.js
-    // let today = new Date()
+  // MOVE to lib/date.js
+    let today = new Date()
 
-    // // Use JS toLocalDateString to convert the date format  to Today is: Friday, July 15(specified in options)
-    // let options = {
-    //   weekday: "long",
-    //   day: "numeric",
-    //   month: "long"
-    // }
+    // Use JS toLocalDateString to convert the date format  to Today is: Friday, July 15(specified in options)
+    let options = {
+      weekday: "long",
+      day: "numeric",
+      month: "long"
+    }
 
-    // let day = today.toLocaleDateString("en-us", options)
+    let day = today.toLocaleDateString("en-us", options)
 
     res.render('home', {todayDate: day})
 })
