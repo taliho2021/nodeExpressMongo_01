@@ -80,12 +80,8 @@ app.use('/auth', require('./routes/auth'))
 app.use('/posts', require('./routes/posts'))
 app.use('/importers', require('./routes/importers'))
 
-let PORT = process.env.PORT 
 
-if (PORT == null || PORT == "") {
-  PORT = 8000
-}
-app.listen(PORT, () => console.log(`Server started at localhost: ${PORT}`))
+app.listen(process.env.PORT || 8000 )
 
 // function initial() {
 //     Role.estimatedDocumentCount((err, count) => {
