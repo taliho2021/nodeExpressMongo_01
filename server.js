@@ -70,6 +70,10 @@ app.get('/customers', (req, res) =>{
   res.render('customers')
 })
 
+app.get('/dashboard', (req, res) =>{
+  res.render('dashboard')
+})
+
 
 
 
