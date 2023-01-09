@@ -25,12 +25,12 @@ const userSchema = new mongoose.Schema({
     }
 })
 
-// //hash the password
+// //hash the password Sync
 userSchema.methods.generateHash = function(password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
 }
 
-// // checking if password is valild
+// // checking if password is valild Sync
 userSchema.methods.validPassword = function(password) {
     return bcrypt.compareSync(password, this.passowrd)
 }

@@ -1,18 +1,16 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const { check, validationResult } = require('express-validator')
+const { check, validationResult } = require("express-validator");
 
-const User = require('../models/user');
-const Role = require('../models/role');
-
+const User = require("../models/user");
+const Role = require("../models/role");
 
 exports.signup = (req, res) => {
-
   // Create an user object with hashed password
   const newUser = new User({
     username: req.body.username,
     email: req.body.email,
-    password: req.body.password
+    password: req.body.password,
   });
 
   //Save user in the database
@@ -25,7 +23,7 @@ exports.signup = (req, res) => {
     if (req.body.roles) {
       Role.find(
         {
-          name: { $in: req.body.roles }
+          name: { $in: req.body.roles },
         },
         (err, roles) => {
           if (err) {
@@ -33,8 +31,8 @@ exports.signup = (req, res) => {
             return;
           }
 
-          user.roles = roles.map(role => role._id);
-          user.save(err => {
+          user.roles = roles.map((role) => role._id);
+          user.save((err) => {
             if (err) {
               res.status(500).send({ message: err });
               return;
@@ -52,7 +50,7 @@ exports.signup = (req, res) => {
         }
 
         user.roles = [role._id];
-        user.save(err => {
+        user.save((err) => {
           if (err) {
             res.status(500).send({ message: err });
             return;
@@ -66,11 +64,10 @@ exports.signup = (req, res) => {
 };
 
 exports.signin = (req, res) => {
-  
   User.findOne({
-    username: req.body.username
+    username: req.body.username,
   })
-    .populate("roles", "-__v") 
+    .populate("roles", "-__v")
     .exec((err, user) => {
       if (err) {
         res.status(500).send({ message: err });
@@ -81,20 +78,20 @@ exports.signin = (req, res) => {
         return res.status(404).send({ message: "User Not found." });
       }
 
-      // const passwordIsValid = bcrypt.compareSync(
-      //   req.body.password,
-      //   user.password
-      // );
+      const passwordIsValid = bcrypt.compareSync(
+        req.body.password,
+        user.password
+      );
 
-      // if (!passwordIsValid) {
-      //   return res.status(401).send({
-      //     accessToken: null,
-      //     message: "Invalid Password!"
-      //   });
-      // }
+      if (!passwordIsValid) {
+        return res.status(401).send({
+          accessToken: null,
+          message: "Invalid Password!",
+        });
+      }
 
       const token = jwt.sign({ id: user._id }, process.env.SECRET, {
-        expiresIn: '1h' // 1 hour
+        expiresIn: "1h", // 1 hour
       });
 
       var authorities = [];
@@ -107,7 +104,7 @@ exports.signin = (req, res) => {
         username: user.username,
         email: user.email,
         roles: authorities,
-        accessToken: token
+        accessToken: token,
       });
     });
 };

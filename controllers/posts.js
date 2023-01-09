@@ -1,6 +1,6 @@
 const Post = require('../models/post')
 
-exports.getPosts = (async(req, res, next) => {
+exports.getPosts = (async(res, next) => {
     try {
         const posts = await Post.find()
         res.json(posts)

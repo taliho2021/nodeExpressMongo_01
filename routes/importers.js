@@ -1,9 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const importController = require('../controllers/importers')
+const auth = require("../middleware/auth");
 
 // Gettting all importers
-router.get('/',importController.getImporters)
+router.get('/',auth, importController.getImporters)
 
 //Creating importer
 router.post('/', importController.addImporter)

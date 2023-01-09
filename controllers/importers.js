@@ -42,8 +42,26 @@ exports.updateImporter = ((req, res, next) => {
     const website = req.body.website
     const email1 = req.body.email1
 
-    res.send({messafe: 'Importer updated'})
-    next()
+    Importer.findOne(cId).then (importer => {
+        importer.name = name;
+        importer.address1 = address1;
+        importer.address2 = address2;
+        importer.city = city;
+        importer.state = state;
+        importer.country = country;
+        importer.phone1 = phone1;
+        importer.website = website;
+        importer.email1 = email1;
+        return importer.save()
+    })
+    .then (result => {
+        res.send({messafe: 'Importer updated'})
+    })
+    .catch(err => console.log(err));
+
+    });
+
+   
 
 //     Importer.findOneAndUpdate ({cliendtId: cId}, (err, foundImporter)
 //         .then(foundImporter => {
@@ -73,7 +91,6 @@ exports.updateImporter = ((req, res, next) => {
 //             next(err)
 //         })
 // )
-})
 
 // Add a new importer to DB
 exports.addImporter = (async (req, res, next ) => {
