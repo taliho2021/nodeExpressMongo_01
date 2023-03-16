@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 const bcrypt = require('bcryptjs')
 
 const userSchema = new mongoose.Schema({
@@ -26,12 +26,12 @@ const userSchema = new mongoose.Schema({
 })
 
 // //hash the password Sync
-userSchema.methods.generateHash = function(password) {
+userSchema.methods.generateHash = function(password: string) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
 }
 
 // // checking if password is valild Sync
-userSchema.methods.validPassword = function(password) {
+userSchema.methods.validPassword = function(password: string) {
     return bcrypt.compareSync(password, this.passowrd)
 }
 
@@ -41,9 +41,9 @@ userSchema.pre("save", function (next) {
     const user = this
 
     if (this.isModified("password") || this.isNew) {
-      bcrypt.genSalt(10, function (saltError, salt) {
+      bcrypt.genSalt(10, function (saltError:string, salt:number) {
         if (saltError) {
-          return next(saltError)
+          return next(saltError:number)
         } else {
           bcrypt.hash(user.password, salt, function(hashError, hash) {
             if (hashError) {

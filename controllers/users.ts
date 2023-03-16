@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken')
+let jwt = require('jsonwebtoken')
 
 const User = require('../models/user')
 
@@ -26,7 +26,7 @@ exports.getUser = (req, res, next)  =>{
         }
     })
 
-    
+
     // res.status(200).json({ tokne: token, cUser})   Cannot set headers after they are sent to the client
 
 }
@@ -40,7 +40,7 @@ exports.addOneUser = (async (req,res, next) =>{
         roles: req.body.roles,
         date: new Date()
      })
-     
+
      try{
        const newUser = await user.save()
        console.log('Saved user to DB', newUser)
@@ -49,11 +49,11 @@ exports.addOneUser = (async (req,res, next) =>{
          res.status(400).json({message: err.message})
      }
 })
-  
+
 exports.adminBoard = function(req, res)  {
     res.status(200).send("ANA Link Admin Board");
 };
-  
+
 exports.moderatorBoard = function (req, res) {
     res.status(200).send("Moderator Contect for ANA Link, Ltd.")
 };
@@ -95,4 +95,4 @@ exports.moderatorBoard = function (req, res) {
 //     }
 // )
 
-exports.updateUser = (req, res, next) =>{}
+exports.updateUser = (req:string, res:string, next) =>{}

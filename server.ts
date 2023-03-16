@@ -1,4 +1,4 @@
-const express = require('express')
+import  express  from 'express'
 const path = require('path')
 const passport = require('passport')
 const cors = require('cors')
@@ -44,33 +44,33 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 
 // Home route
-app.get('/', (req, res) =>{   
+app.get('/', (res) =>{
 
   // MOVE to lib/date.js
     let today = new Date()
 
     // Use JS toLocalDateString to convert the date format  to Today is: Friday, July 15(specified in options)
-    let options = {
-      weekday: "long",
-      day: "numeric",
-      month: "long"
-    }
+    // const options = {
+    //   weekday: "long",
+    //   day: "numeric",
+    //   month: "long"
+    // }
 
-    let day = today.toLocaleDateString("en-us", options)
+    let day = today.toLocaleDateString("en-us")
 
     res.render('home', {todayDate: day})
 })
 
-app.get('/about', (req, res) =>{
+app.get('/about', (res) =>{
   let today = new Date()
   res.render('about', {todayDate: today})
 })
 
-app.get('/customers', (req, res) =>{
+app.get('/customers', (res) =>{
   res.render('customers')
 })
 
-app.get('/dashboard', (req, res) =>{
+app.get('/dashboard', (res) =>{
   res.render('dashboard')
 })
 
@@ -78,11 +78,12 @@ app.get('/dashboard', (req, res) =>{
 
 
 
-// Define Routes - 4 routes
+// Define Routes - 5 routes
 app.use('/users', require('./routes/users'))
 app.use('/auth', require('./routes/auth'))
 app.use('/posts', require('./routes/posts'))
-app.use('/importers', require('./routes/importers'))
+// app.use('/importers', require('./routes/importers'))
+// app.use('/isfSummary', require('./routes/isfSummary'))
 
 
 app.listen(process.env.PORT || 8000 )
@@ -96,27 +97,27 @@ app.listen(process.env.PORT || 8000 )
 //           if (err) {
 //             console.log("error", err);
 //           }
-  
+
 //           console.log("added 'user' to roles collection");
 //         });
-  
+
 //         new Role({
 //           name: "moderator"
 //         }).save(err => {
 //           if (err) {
 //             console.log("error", err);
 //           }
-  
+
 //           console.log("added 'moderator' to roles collection");
 //         });
-  
+
 //         new Role({
 //           name: "admin"
 //         }).save(err => {
 //           if (err) {
 //             console.log("error", err);
 //           }
-  
+
 //           console.log("added 'admin' to roles collection");
 //         });
 //       }

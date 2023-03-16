@@ -1,4 +1,4 @@
-const {validationResult } = require('express-validator')
+import {validationResult } from ('express-validator')
 const path = require('path')
 
 const Importer = require('../models/importer')
@@ -61,7 +61,7 @@ exports.updateImporter = ((req, res, next) => {
 
     });
 
-   
+
 
 //     Importer.findOneAndUpdate ({cliendtId: cId}, (err, foundImporter)
 //         .then(foundImporter => {
@@ -112,7 +112,7 @@ exports.addImporter = (async (req, res, next ) => {
        res.status(201).json(newImporter)
      } catch (err) {
          res.status(400).json({message: err.message})
- 
+
      }
 })
 
@@ -133,8 +133,8 @@ exports.deleteImporter = (req, res, next) => {
         //         res.status(200).json({ message: 'Importer fetched', importer:data})
         //         window.alert(data.value|json)
         //         })
-        // } 
-        
+        // }
+
         // catch (err) {
         //     if (!err.statusCode) {
         //         err.statusCode = 500
@@ -146,7 +146,7 @@ exports.deleteImporter = (req, res, next) => {
 exports.adminBoard = (req, res) => {
     res.status(200).send("Admin Content.");
 };
-    
+
 exports.moderatorBoard = (req, res) => {
     res.status(200).send("Moderator Content.");
 };
