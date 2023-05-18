@@ -1,98 +1,89 @@
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
-const User = require('../models/user')
+const User = require("../models/user");
 
-exports.getUsers =(async(req, res, next) =>{
-    try {
-        const users = await User.find()
-        res.json(users)
-    } catch(err) {
-        res.status(500).json({ message: err.message})
-    }
-})
-
-exports.getUser = (req, res, next)  =>{
-    const cUser = req.params.username
-
-    User.findOne({ username: cUser}, (err, foundUser) => {
-        if (foundUser) {
-            const token = jwt.sign({id: cUser}, process.env.SECRET, {
-                expiresIn: 10000
-            })
-            res.json(foundUser)       // Send the token to the requester
-            console.log(token, foundUser);
-        } else {
-            res.send("No user matching the username found")
-        }
-    })
-
-    
-    // res.status(200).json({ tokne: token, cUser})   Cannot set headers after they are sent to the client
-
-}
-
-exports.addOneUser = (async (req,res, next) =>{
-    const user = new User({
-        name: req.body.name,
-        username: req.body.username,
-        email: req.body.email,
-        password: req.body.password,
-        roles: req.body.roles,
-        date: new Date()
-     })
-     
-     try{
-       const newUser = await user.save()
-       console.log('Saved user to DB', newUser)
-       res.status(201).json(newUser)
-     } catch (err) {
-         res.status(400).json({message: err.message})
-     }
-})
-  
-exports.adminBoard = function(req, res)  {
-    res.status(200).send("ANA Link Admin Board");
-};
-  
-exports.moderatorBoard = function (req, res) {
-    res.status(200).send("Moderator Contect for ANA Link, Ltd.")
+exports.getUsers = async (req, res, next) => {
+	try {
+		const users = await User.find();
+		res.json(users);
+	} catch (err) {
+		res.status(500).json({ message: err.message });
+	}
 };
 
-// exports.login = ((req, res) => {
-//         // Login logic starts here
-//         // Get user input
-//         const email = req.body.email
-//         const password = req.body.password
-//         //console.log(email, password)
-//         console.log(req.body.email, req.body.password)
-//         // Validate user input
-//         if (!(email && password)) {
-//             res.status(400).send('Email & Password are required')
-//         }
+exports.getUser = async (req, res, next) => {
+	try {
+		const cUser = req.params.username;
+		const foundUser = await User.findOne({ username: cUser });
 
-//         // Validate if user exist in DB
-//         const user = User.findOne({ email })
+		if (!foundUser) {
+			return res.status(404).send("No user matching the username found");
+		}
 
-//         if (user && (bcrypt.compare(password, user.password))) {
-//             // Create token
-//             const token = jwt.sign(
-//                 { email },
-//                 process.env.TOKEN_KEY,
-//                 {
-//                     expiresIn: '2h',
-//                 }
-//             )
+		const token = jwt.sign({ id: cUser }, process.env.SECRET, {
+			expiresIn: 10000,
+		});
+		res.setHeader("Authorization", "Bearer " + token);
+		res.json(foundUser);
+	} catch (err) {
+		res.status(500).json({ message: err.message });
+	}
+};
 
-//             // save user token
-//             user.token = token
+exports.addOneUser = async (req, res, next) => {
+	const hashedPassword = await bcrypt.hash(req.body.password, 10);
+	const user = new User({
+		name: req.body.name,
+		username: req.body.username,
+		email: req.body.email,
+		password: hashedPassword,
+		roles: req.body.roles,
+		date: new Date(),
+	});
 
-//             //user
-//             res.status(200).json(user)
-//             console.log(token, user.token)
-//             return
-//         }
+	try {
+		const newUser = await user.save();
+		res.status(201).json(newUser);
+	} catch (err) {
+		res.status(400).json({ message: err.message });
+	}
+};
 
-//     }
-// )
+exports.adminBoard = (req, res) => {
+	res.status(200).send("ANA Link Admin Board");
+};
 
-exports.updateUser = (req, res, next) =>{}
+exports.moderatorBoard = (req, res) => {
+	res.status(200).send("Moderator Content for ANA Link, Ltd.");
+};
+
+exports.login = async (req, res) => {
+	const { email, password } = req.body;
+
+	if (!email || !password) {
+		return res.status(400).send("Email & Password are required");
+	}
+
+	try {
+		const user = await User.findOne({ email });
+
+		if (!user || !bcrypt.compareSync(password, user.password)) {
+			return res.status(401).send("Invalid credentials");
+		}
+
+		const token = jwt.sign({ email }, process.env.TOKEN_KEY, {
+			expiresIn: "2h",
+		});
+
+		user.token = token;
+		res.setHeader("Authorization", "Bearer " + token);
+		res.status(200).json(user);
+	} catch (err) {
+		res.status(500).json({ message: err.message });
+	}
+};
+
+exports.updateUser = async (req, res, next) => {
+	// TBD: update user logic
+};

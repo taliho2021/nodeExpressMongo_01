@@ -1,58 +1,81 @@
-const express = require('express')
-const passport = require('passport')
-const path = require('path')
-const User = require('../models/user')
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const { check, validationResult } = require("express-validator");
 
-/**
- * -------------- GENERAL SETUP ----------------
- */
+const User = require("../models/user");
+const Role = require("../models/role");
 
-// Gives us access to variables set in the .env file via `process.env.VARIABLE_NAME` syntax
-require('dotenv').config();
+exports.signup = async (req, res) => {
+	// Create an user object with hashed password
+	const hashedPassword = await bcrypt.hash(req.body.password, 10);
+	const newUser = new User({
+		username: req.body.username,
+		email: req.body.email,
+		password: hashedPassword,
+	});
 
-// Must first load the models
-require('../models/user');
+	try {
+		const user = await newUser.save();
 
-// Pass the global passport object into the configuration function
-require('../config/passport')(passport);
+		if (req.body.roles) {
+			const roles = await Role.find({
+				name: { $in: req.body.roles },
+			});
 
-const app = express()
-// This will initialize the passport object on every request
-app.use(passport.initialize());
+			user.roles = roles.map((role) => role._id);
+		} else {
+			const role = await Role.findOne({ name: "user" });
 
-// Where Angular builds to - In the ./angular/angular.json file, you will find this configuration
-// at the property: projects.angular.architect.build.options.outputPath
-// When you run `ng build`, the output will go to the ./public directory
-app.use(express.static(path.join(__dirname, 'public')));
+			user.roles = [role._id];
+		}
 
-/**
- * -------------- ROUTES ----------------
- */
+		await user.save();
 
-// Imports all of the routes from ./routes/index.js
-app.use(require('../routes/users'));
+		res.send({ message: "User was registered successfully!" });
+	} catch (err) {
+		res.status(500).send({ message: err.message });
+	}
+};
 
-module.exports = function (req, res, next) {
-    // Get token from header
-    const token = req.header('x-auth-token')
+exports.signin = async (req, res) => {
+	try {
+		const user = await User.findOne({
+			username: req.body.username,
+		}).populate("roles", "-__v");
 
-    // Check if no token
-    if (!token) {
-        return res.status(401).json({ msg: 'No token, authorization denied. Please update your token'})
-    }
+		if (!user) {
+			return res.status(404).send({ message: "User Not found." });
+		}
 
-    // Verify token
-    try{
-        jwt.verify(token, config.get('jwtSecret'), (error, decoded) => {
-            if (error) {
-                return res.status(401).json({ msg: 'Token is not valid'})
-            } else {
-                req.user = decoded.user;
-                next()
-            }
-        })
-    } catch (err) {
-        console.error ('something wrong with auth middleware');
-        res.status(500).json({ msg: 'Server Error'})
-    }
-}
+		const passwordIsValid = await bcrypt.compare(
+			req.body.password,
+			user.password
+		);
+
+		if (!passwordIsValid) {
+			return res.status(401).send({
+				accessToken: null,
+				message: "Invalid Password!",
+			});
+		}
+
+		const token = jwt.sign({ id: user._id }, process.env.SECRET, {
+			expiresIn: "1h", // 1 hour
+		});
+
+		var authorities = [];
+
+		for (let i = 0; i < user.roles.length; i++) {
+			authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
+		}
+		res.status(200).send({
+			id: user._id,
+			username: user.username,
+			email: user.email,
+			roles: authorities,
+			accessToken: token,
+		});
+	} catch (err) {
+		res.status(500).send({ message: err.message });
+	}
+};

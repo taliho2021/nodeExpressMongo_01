@@ -69,7 +69,7 @@ router.post('/register', function(req, res, next){
 
 });
 
-const userController = require('../controllers/users')
+const userController = require('../controllers/users-old')
 router.get('/', userController.getUsers)
 
 module.exports = router;
